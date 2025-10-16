@@ -93,7 +93,6 @@ const IconButton = styled.button`
 
 export const TaskItem = (p: TaskItemProps) => {
   const [showDescription, setShowDescription] = useState(false);
-  console.log("task", p.task.id, p.task.title, "description:", JSON.stringify(p.task.description));
   return (
     <ListItem isFirst={p.isFirst}>
       <Content>
