@@ -4,6 +4,7 @@ export type Task = {
     completed: boolean;      // статус выполнения
     createdAt: Date;         // дата создания
     description?: string;    // описание 
+    deadline?: Date | null; // прогресс бар
 };
 
 // Тип фильтра для списка задач
@@ -17,5 +18,6 @@ export function makeTask(title: string): Task {
         completed: false,
         createdAt: new Date(),
         description: "",
+        deadline: null,
     };
 };

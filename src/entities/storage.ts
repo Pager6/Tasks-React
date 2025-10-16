@@ -4,6 +4,7 @@ import type { Task } from "./task";
 const STORAGE_KEY = "tasks";
 export function saveTasks(tasks: Task[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 export function loadTasks(): Task[] {
   try {
@@ -13,6 +14,7 @@ export function loadTasks(): Task[] {
     return parsed.map((t: any) => ({
       ...t,
       createdAt: new Date(t.createdAt),
+      deadline: t.deadline ? new Date(t.deadline) : null,
       description: t.description ?? "",
     }));
   } catch {

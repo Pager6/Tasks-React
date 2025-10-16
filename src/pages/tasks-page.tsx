@@ -8,6 +8,8 @@ import { FilterBar } from "../views/filter-bar";
 import { SearchBar } from "../views/search-bar";
 import type { Sort } from "../views/sort-bar";
 import { TaskModal } from "../components/task-modal";
+import { ProgressBar } from "../components/progress-bar";
+
 
 const Wrapper = styled.div`
   padding: ${(p) => p.theme.spacing(4)};
@@ -21,6 +23,10 @@ export const TasksPage = () => {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const total = tasks.length;
+  const completed = tasks.filter((t) => t.completed).length;
+  const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+
 
   const handleAddTask = (title: string) => {
     const newTask = makeTask(title);
@@ -33,11 +39,12 @@ export const TasksPage = () => {
     );
   };
 
-  const handleEditTask = (editedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === editedTask.id ? editedTask : t))
+  const handleEditTask = (updatedTask: Task) => {
+    setTasks(
+      tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t))
     );
   };
+
 
   const handleRemoveTask = (id: string) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
@@ -83,6 +90,8 @@ export const TasksPage = () => {
         sort={sort}
         onSortChange={setSort}
       />
+
+      <ProgressBar percent={percent} />
 
       <TaskList
         tasks={sortedTasks}

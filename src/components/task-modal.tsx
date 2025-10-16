@@ -69,6 +69,10 @@ export const TaskModal = (p: TaskModalProps) => {
   const [visible, setVisible] = useState(false); 
   const [title, setTitle] = useState(p.task.title);
   const [description, setDescription] = useState(p.task.description ?? "");
+  const [deadline, setDeadline] = useState<string>(
+    p.task.deadline ? p.task.deadline.toISOString().split("T")[0] : ""
+);
+
 
   useEffect(() => {
     const timeout = setTimeout(() => setVisible(true), 10);
@@ -90,19 +94,32 @@ export const TaskModal = (p: TaskModalProps) => {
 
   const handleSave = () => {
     const trimmedTitle = title.trim();
-    if (trimmedTitle === "") return; 
+    if (!trimmedTitle) return;
+
     p.onSave({
       ...p.task,
       title: trimmedTitle,
       description: description.trim(),
+      deadline: deadline ? new Date(deadline) : null
     });
-    p.onClose();
+
+    setVisible(false);
+    setTimeout(p.onClose, 300);
   };
 
   return (
     <Overlay visible={visible}>
       <Modal visible={visible} role="dialog" aria-modal="true" aria-label="Редактирование задачи">
         <h2>Редактирование задачи</h2>
+
+        <label>
+          Дедлайн:
+            <input
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+            />
+        </label>
 
         <Input
           value={title}

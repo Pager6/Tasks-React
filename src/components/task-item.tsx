@@ -1,6 +1,23 @@
 import React, { useState  } from "react";
 import styled from "@emotion/styled";
 import type { Task } from "../entities/task";
+import { useTheme } from "@emotion/react";
+
+const DatesRow = styled.div`
+    display: flex;
+    align-items: flex-end;
+    gap: ${(p) => p.theme.spacing(1)};
+    font-size: 12px;
+    margin-top: 2px;
+`;
+
+const DeadlineText = styled.span<{ color: string }>`
+    color: ${(p) => p.color};
+    font-weight: normal;
+`;
+const Arrow = styled.span`
+    color: ${(p) => p.theme.colors.textMuted};
+`;
 
 const TitleRow = styled.div`
     display: flex;
@@ -93,6 +110,17 @@ const IconButton = styled.button`
 
 export const TaskItem = (p: TaskItemProps) => {
   const [showDescription, setShowDescription] = useState(false);
+  const theme = useTheme();
+  const getDeadlineColor = (date: Date, theme: any) => {
+      const now = new Date();
+      const diff = date.getTime() - now.getTime();
+      const days = diff / (1000 * 60 * 60 * 24);
+
+      if (days < 0) return theme.colors.error;
+      if (days <= 1) return theme.colors.warning;
+      if (days <= 3) return theme.colors.accent;
+      return theme.colors.textMuted;
+  };
   return (
     <ListItem isFirst={p.isFirst}>
       <Content>
@@ -117,7 +145,7 @@ export const TaskItem = (p: TaskItemProps) => {
         <Description expanded={showDescription}>
           {p.task.description ?? ""}
         </Description>
-
+      <DatesRow>
         <DateText>
           {p.task.createdAt.toLocaleString("ru-RU", {
             day: "2-digit",
@@ -127,6 +155,19 @@ export const TaskItem = (p: TaskItemProps) => {
             minute: "2-digit",
           })}
         </DateText>
+      {p.task.deadline && (
+    <>
+        <Arrow>→</Arrow>
+        <DeadlineText color={getDeadlineColor(p.task.deadline, theme)}>
+            {p.task.deadline.toLocaleDateString("ru-RU", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            })}
+      </DeadlineText>
+    </>
+)}
+      </DatesRow>
       </Content>
 
       <div>
