@@ -17,7 +17,7 @@ const Select = styled.select`
     border: 1px solid ${(p) => p.theme.colors.border};
     border-radius: 6px;
     color: black;
-    background: ${(p) => p.theme.colors.bg || "#ffffffff"};
+    background: ${(p) => p.theme.colors.surface || "#fff"};
     cursor: pointer;
 `;
 
